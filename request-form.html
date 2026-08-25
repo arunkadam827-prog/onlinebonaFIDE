@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Request · Bonafide Certificate Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">
+        <div class="brand-seal">BC</div>
+        <div>
+            <div class="brand-name">Bonafide Certificate Portal</div>
+            <div class="brand-sub">XYZ College of Engineering</div>
+        </div>
+    </div>
+    <div class="topbar-user">
+        <span th:text="${student.name}"></span>
+        <a href="/logout" class="btn-link">Sign out</a>
+    </div>
+</div>
+
+<div class="page" style="max-width: 620px;">
+    <span class="eyebrow">New Request</span>
+    <h1 style="margin-top:4px;">Request a Bonafide Certificate</h1>
+    <p class="page-lede">Tell us why you need the certificate. The registrar's office will review and either approve or reject your request.</p>
+
+    <form method="post" th:action="@{/student/request/new}" style="background:#fff; border:1px solid var(--rule); border-radius:4px; padding:28px 30px;">
+        <div class="field">
+            <label for="purpose">Purpose</label>
+            <select id="purpose" name="purpose" required>
+                <option value="">Select a purpose</option>
+                <option value="Bank Loan Application">Bank Loan Application</option>
+                <option value="Passport Application">Passport Application</option>
+                <option value="Bus / Railway Concession Pass">Bus / Railway Concession Pass</option>
+                <option value="Scholarship Application">Scholarship Application</option>
+                <option value="Higher Studies / University Application">Higher Studies / University Application</option>
+                <option value="Visa Application">Visa Application</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="additionalDetails">Additional details (optional)</label>
+            <textarea id="additionalDetails" name="additionalDetails" rows="4" placeholder="Any specifics the registrar should know, e.g. bank name or reference number"></textarea>
+        </div>
+        <button type="submit" class="btn">Submit request</button>
+    </form>
+
+    <p style="margin-top:20px;"><a href="/student/dashboard" class="btn-link">← Back to my requests</a></p>
+</div>
+
+</body>
+</html>

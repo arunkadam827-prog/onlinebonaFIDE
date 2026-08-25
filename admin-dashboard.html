@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Dashboard · Bonafide Certificate Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">
+        <div class="brand-seal">BC</div>
+        <div>
+            <div class="brand-name">Bonafide Certificate Portal</div>
+            <div class="brand-sub">Registrar's Office</div>
+        </div>
+    </div>
+    <div class="topbar-user">
+        <span th:text="${admin.name}"></span>
+        <a href="/logout" class="btn-link">Sign out</a>
+    </div>
+</div>
+
+<div class="page">
+    <span class="eyebrow">Registrar Dashboard</span>
+    <h1 style="margin-top:4px;">All Certificate Requests</h1>
+    <p class="page-lede">Review pending requests and issue decisions. Approved students can immediately download their signed certificate.</p>
+
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-num" th:text="${#lists.size(requests.?[status.name() == 'PENDING'])}"></div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" th:text="${#lists.size(requests.?[status.name() == 'APPROVED'])}"></div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" th:text="${#lists.size(requests.?[status.name() == 'REJECTED'])}"></div>
+            <div class="stat-label">Rejected</div>
+        </div>
+    </div>
+
+    <div class="req-list" th:if="${!requests.isEmpty()}">
+        <div class="req-card" th:each="req : ${requests}">
+            <div class="req-main">
+                <p class="req-purpose" th:text="${req.purpose}"></p>
+                <div class="req-student">
+                    <strong th:text="${req.student.name}"></strong> ·
+                    <span th:text="${req.student.rollNumber}"></span> ·
+                    <span th:text="${req.student.department}"></span>
+                </div>
+                <div class="req-meta">
+                    Requested <span th:text="${#temporals.format(req.requestedAt, 'dd MMM yyyy, HH:mm')}"></span>
+                </div>
+                <div class="req-details" th:if="${req.additionalDetails != null and !req.additionalDetails.isEmpty()}"
+                     th:text="${req.additionalDetails}"></div>
+            </div>
+
+            <div class="req-actions">
+                <span class="badge badge-pending" th:if="${req.status.name() == 'PENDING'}">Pending</span>
+                <span class="badge badge-approved" th:if="${req.status.name() == 'APPROVED'}">Approved</span>
+                <span class="badge badge-rejected" th:if="${req.status.name() == 'REJECTED'}">Rejected</span>
+
+                <form th:if="${req.status.name() == 'PENDING'}" method="post" th:action="@{/admin/request/{id}/approve(id=${req.id})}" class="remarks-form">
+                    <input type="text" name="remarks" placeholder="Remarks (optional)">
+                    <button type="submit" class="btn btn-approve btn-sm">Approve</button>
+                </form>
+                <form th:if="${req.status.name() == 'PENDING'}" method="post" th:action="@{/admin/request/{id}/reject(id=${req.id})}" class="remarks-form">
+                    <button type="submit" class="btn btn-reject btn-sm">Reject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" th:if="${requests.isEmpty()}">
+        <span class="eyebrow">All clear</span>
+        No certificate requests have been submitted yet.
+    </div>
+</div>
+
+</body>
+</html>

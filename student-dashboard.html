@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests · Bonafide Certificate Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div class="brand">
+        <div class="brand-seal">BC</div>
+        <div>
+            <div class="brand-name">Bonafide Certificate Portal</div>
+            <div class="brand-sub">XYZ College of Engineering</div>
+        </div>
+    </div>
+    <div class="topbar-user">
+        <span th:text="${student.name}"></span>
+        <a href="/logout" class="btn-link">Sign out</a>
+    </div>
+</div>
+
+<div class="page">
+    <div class="page-head">
+        <div>
+            <span class="eyebrow" th:text="${student.rollNumber} + ' · ' + ${student.department}"></span>
+            <h1>My Certificate Requests</h1>
+        </div>
+        <a href="/student/request/new" class="btn btn-outline" style="width:auto;">+ New Request</a>
+    </div>
+    <p class="page-lede">Track the status of your bonafide certificate requests. Once approved, you can download a signed PDF certificate directly from this page.</p>
+
+    <div class="req-list" th:if="${!requests.isEmpty()}">
+        <div class="req-card" th:each="req : ${requests}">
+            <div class="req-main">
+                <p class="req-purpose" th:text="${req.purpose}"></p>
+                <div class="req-meta">
+                    Requested <span th:text="${#temporals.format(req.requestedAt, 'dd MMM yyyy, HH:mm')}"></span>
+                </div>
+                <div class="req-details" th:if="${req.additionalDetails != null and !req.additionalDetails.isEmpty()}"
+                     th:text="${req.additionalDetails}"></div>
+                <div class="req-details" th:if="${req.adminRemarks != null and !req.adminRemarks.isEmpty()}">
+                    Registrar's note: <span th:text="${req.adminRemarks}"></span>
+                </div>
+            </div>
+            <div class="req-actions">
+                <span class="badge badge-pending" th:if="${req.status.name() == 'PENDING'}">Pending Review</span>
+                <span class="badge badge-approved" th:if="${req.status.name() == 'APPROVED'}">Approved</span>
+                <span class="badge badge-rejected" th:if="${req.status.name() == 'REJECTED'}">Rejected</span>
+
+                <a th:if="${req.status.name() == 'APPROVED'}"
+                   th:href="@{/student/request/{id}/download(id=${req.id})}"
+                   class="btn btn-sm" style="text-decoration:none;">Download PDF</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state" th:if="${requests.isEmpty()}">
+        <span class="eyebrow">No requests yet</span>
+        You haven't submitted any certificate requests. Start one when you need proof of enrollment.
+        <br><br>
+        <a href="/student/request/new" class="btn" style="width:auto; display:inline-block;">Submit your first request</a>
+    </div>
+</div>
+
+</body>
+</html>

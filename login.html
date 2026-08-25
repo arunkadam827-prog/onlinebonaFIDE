@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In · Bonafide Certificate Portal</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-wrap">
+    <div class="auth-card">
+        <div class="auth-seal">BC</div>
+        <h1>Bonafide Certificate Portal</h1>
+        <p class="auth-sub">Sign in to request or process certificates</p>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <form method="post" th:action="@{/login}">
+            <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Sign in</button>
+        </form>
+
+        <p class="auth-foot">New student? <a href="/register">Create an account</a></p>
+
+        <div class="demo-hint">
+            DEMO ADMIN &nbsp;→&nbsp; admin@college.edu / admin123<br>
+            DEMO STUDENT → student@college.edu / student123
+        </div>
+    </div>
+</div>
+</body>
+</html>
